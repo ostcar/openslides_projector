@@ -23,7 +23,7 @@
   copy:
     dest: ~/.xinitrc
     content: |
-      midori  -e Fullscreen -a http://localhost/projector &
+      midori  -e Fullscreen -a http://localhost/projector/1 &
       exec matchbox-window-manager -use_titlebar no -use_cursor no
 
 - name: Create .bash_profile
@@ -32,7 +32,7 @@
   copy:
     dest: ~/.bash_profile
     content: |
-      sleep 10  # this should be done in systemd
+      sleep 5  # this should be done in systemd
       [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
 
 - name: Ensures /etc/systemd/system/getty@tty1.service.d/ dir exists
