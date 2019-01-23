@@ -1,15 +1,15 @@
 ---
 - name: Install requirements
-  pacman:
+  apt:
     name: "{{ item }}"
     state: present
   become: yes
+  install_recommends: no
   with_items:
   - midori
   - matchbox-window-manager
-  - xf86-video-fbdev
-  - xorg-xinit
-  - xorg-server
+  - xinit
+  - xserver-xorg
 
 - name: Create user openslides_projector
   become: yes
