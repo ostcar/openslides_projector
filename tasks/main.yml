@@ -15,7 +15,7 @@
   become: yes
   user:
     name: openslides_projector
-    groups: openslides_projector,video
+    groups: video
     shell: /bin/bash
     state: present
 
