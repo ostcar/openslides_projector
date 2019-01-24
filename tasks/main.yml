@@ -3,8 +3,8 @@
   apt:
     name: "{{ item }}"
     state: present
+    install_recommends: no
   become: yes
-  install_recommends: no
   with_items:
   - midori
   - matchbox
