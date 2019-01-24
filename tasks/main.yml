@@ -10,6 +10,7 @@
   - matchbox
   - xinit
   - xserver-xorg
+  - x11-xserver-utils
 
 - name: Create user openslides_projector
   become: yes
