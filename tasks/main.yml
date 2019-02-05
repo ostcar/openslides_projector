@@ -6,11 +6,11 @@
     install_recommends: no
   become: yes
   with_items:
-  - midori
-  - matchbox
   - xinit
   - xserver-xorg
   - x11-xserver-utils
+  - openbox
+  - chromium-browser
 
 - name: Create user openslides_projector
   become: yes
@@ -20,14 +20,11 @@
     shell: /bin/bash
     state: present
 
-- name: Create .xinitrc
+- name: Create Openbox autostart
   become: yes
-  become_user: openslides_projector
   copy:
-    dest: ~/.xinitrc
-    content: |
-      midori  -e Fullscreen -a http://localhost/projector/1 &
-      exec matchbox-window-manager -use_titlebar no -use_cursor no
+    dest: /etc/xdg/openbox/autostart
+	src: autostart.j2
 
 - name: Create .bash_profile
   become: yes
