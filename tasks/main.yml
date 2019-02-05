@@ -1,30 +1,30 @@
 ---
 - name: Install requirements
-  pacman:
+  apt:
     name: "{{ item }}"
     state: present
+    install_recommends: no
   become: yes
   with_items:
-  - midori
-  - matchbox-window-manager
-  - xf86-video-fbdev
-  - xorg-xinit
-  - xorg-server
+  - xinit
+  - xserver-xorg
+  - x11-xserver-utils
+  - openbox
+  - chromium-browser
 
 - name: Create user openslides_projector
   become: yes
   user:
     name: openslides_projector
+    groups: video
+    shell: /bin/bash
     state: present
 
-- name: Create .xinitrc
+- name: Create Openbox autostart
   become: yes
-  become_user: openslides_projector
   copy:
-    dest: ~/.xinitrc
-    content: |
-      midori  -e Fullscreen -a http://localhost/projector/1 &
-      exec matchbox-window-manager -use_titlebar no -use_cursor no
+    dest: /etc/xdg/openbox/autostart
+    src: autostart.j2
 
 - name: Create .bash_profile
   become: yes
@@ -33,6 +33,9 @@
     dest: ~/.bash_profile
     content: |
       sleep 5  # this should be done in systemd
+      xset -dpms # disable DPMS (Energy Star) features.
+      xset s off # disable screen saver
+      xset s noblank # don't blank the video device
       [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
 
 - name: Ensures /etc/systemd/system/getty@tty1.service.d/ dir exists
@@ -46,11 +49,11 @@
     dest: /etc/systemd/system/getty@tty1.service.d/override.conf
     content: |
       [Unit]
-      After=openslides.service
-      Requires=openslides.service
+      After=openslides@8404.service
+      Requires=openslides@8400.service
       [Service]
       ExecStart=
-      ExecStart=-/usr/bin/agetty --autologin openslides_projector --noclear %I $TERM
+      ExecStart=-/sbin/agetty --autologin openslides_projector --noclear %I $TERM
   register: createAutologinSystemFile
 
 - name: Reload systemd units
