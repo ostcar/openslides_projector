@@ -24,7 +24,7 @@
   become: yes
   copy:
     dest: /etc/xdg/openbox/autostart
-	src: autostart.j2
+    src: autostart.j2
 
 - name: Create .bash_profile
   become: yes
